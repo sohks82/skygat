@@ -16,8 +16,8 @@ export async function getActiveMemberCount(): Promise<number> {
 
 export async function getItems(includeInactive = false): Promise<Item[]> {
   return (includeInactive
-    ? await sql`select id, name, cost, backup_cost, sort_order, active from items order by sort_order, id`
-    : await sql`select id, name, cost, backup_cost, sort_order, active from items where active order by sort_order, id`) as Item[];
+    ? await sql`select id, name, cost, backup_cost, (icon is not null) as has_icon, extract(epoch from icon_updated_at)::text as icon_version, sort_order, active from items order by sort_order, id`
+    : await sql`select id, name, cost, backup_cost, (icon is not null) as has_icon, extract(epoch from icon_updated_at)::text as icon_version, sort_order, active from items where active order by sort_order, id`) as Item[];
 }
 
 export async function getQueues(): Promise<ItemWithQueue[]> {

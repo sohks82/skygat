@@ -134,6 +134,30 @@ export async function updateItemAction(fd: FormData) {
   refreshAll();
 }
 
+/** Icons arrive as a small data URL, already resized in the browser. */
+export async function setItemIconAction(fd: FormData) {
+  await requireAdmin();
+  const id = num(fd, "id");
+  const icon = str(fd, "icon");
+
+  if (!/^data:image\/(png|jpeg|webp|gif);base64,/.test(icon)) {
+    throw new Error("That doesn't look like an image.");
+  }
+  // Guards against a hand-crafted request bypassing the browser-side resize.
+  if (icon.length > 200_000) {
+    throw new Error("Icon is too large. Use a smaller image.");
+  }
+
+  await sql`update items set icon = ${icon}, icon_updated_at = now() where id = ${id}`;
+  refreshAll();
+}
+
+export async function removeItemIconAction(fd: FormData) {
+  await requireAdmin();
+  await sql`update items set icon = null, icon_updated_at = now() where id = ${num(fd, "id")}`;
+  refreshAll();
+}
+
 export async function setItemActiveAction(fd: FormData) {
   await requireAdmin();
   await sql`update items set active = ${str(fd, "active") === "true"} where id = ${num(fd, "id")}`;

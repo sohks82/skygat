@@ -2,6 +2,8 @@ import { addItemAction, moveItemAction, setItemActiveAction, updateItemAction } 
 import { isAdmin } from "@/lib/auth";
 import { getItems, getQueues } from "@/lib/data";
 import { Bullets, Empty, PageHead } from "@/components/ui";
+import { IconUpload } from "@/components/icon-upload";
+import { iconUrl } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -28,10 +30,23 @@ export default async function ItemsPage() {
           items.map((item, i) => (
             <div
               key={item.id}
-              className={`grid gap-2 p-3 sm:grid-cols-[1fr_auto] sm:items-center ${
+              className={`grid gap-2 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center ${
                 item.active ? "" : "opacity-55"
               }`}
             >
+              {admin ? (
+                <IconUpload
+                  itemId={item.id}
+                  itemName={item.name}
+                  iconSrc={item.has_icon ? iconUrl(item) : null}
+                />
+              ) : item.has_icon ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={iconUrl(item)} alt="" className="h-9 w-9 object-contain" />
+              ) : (
+                <span className="h-9 w-9" />
+              )}
+
               {admin ? (
                 <form action={updateItemAction} className="grid gap-2 sm:grid-cols-[1fr_110px_110px_auto]">
                   <input type="hidden" name="id" value={item.id} />
@@ -84,6 +99,10 @@ export default async function ItemsPage() {
       </div>
 
       <p className="mt-4 max-w-2xl text-xs text-muted">
+        Icons are resized to 128px in your browser before upload and stored in the database, so they
+        survive redeploys. PNG with transparency looks best on the dark background.
+      </p>
+      <p className="mt-2 max-w-2xl text-xs text-muted">
         The second cost box is the price quoted to the backup in the WhatsApp announcement. Leave it
         blank and the main cost is used for both.
       </p>

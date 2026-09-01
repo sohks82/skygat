@@ -16,6 +16,8 @@ create table if not exists items (
   name        text not null,
   cost        integer not null default 0,
   backup_cost integer,
+  icon        text,
+  icon_updated_at timestamptz,
   sort_order  integer not null default 0,
   active      boolean not null default true
 );

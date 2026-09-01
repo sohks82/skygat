@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getHistory } from "@/lib/data";
+import { isAdmin } from "@/lib/auth";
 import { OUTCOME_LABEL, formatDate, formatDayName } from "@/lib/types";
 import { Bullets, DayChip, Empty, PageHead } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
-  const rows = await getHistory();
+  const [rows, admin] = await Promise.all([getHistory(), isAdmin()]);
 
   const nights = new Map<string, typeof rows>();
   for (const r of rows) {
@@ -17,7 +18,13 @@ export default async function HistoryPage() {
 
   return (
     <>
-      <PageHead eyebrow="Archived results" title="History" />
+      <PageHead eyebrow="Archived results" title="History">
+        {admin ? (
+          <a href="/api/export/history" className="btn" download>
+            Export CSV
+          </a>
+        ) : null}
+      </PageHead>
 
       <p className="eyebrow mb-2">Night by night</p>
       {nights.size === 0 ? (

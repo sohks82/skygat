@@ -164,15 +164,47 @@ on the Items page.
 
 ## Upgrading an existing deployment
 
-New columns were added for the WhatsApp announcement. Run this once against your
-Neon database — paste it into Neon's SQL Editor, or run `npm run db:migrate`:
+Run any new migration once against your Neon database — paste into Neon's SQL
+Editor, or run `npm run db:migrate`. All of these are safe to re-run and add
+columns only, touching no existing data.
 
 ```sql
+-- 001, WhatsApp announcement
 alter table members add column if not exists whatsapp text;
 alter table items add column if not exists backup_cost integer;
+
+-- 002, item icons
+alter table items add column if not exists icon text;
+alter table items add column if not exists icon_updated_at timestamptz;
 ```
 
-Safe to re-run. It adds columns only and touches no existing data.
+## Item icons
+
+Each item can carry a small icon, shown on the Items page and on every queue
+card. Click the square next to an item on the Items page to pick a file; the ✕
+beside it removes one.
+
+Images are resized to 128px square in your browser before upload, so a large
+screenshot still lands as a few KB. They are stored in Postgres rather than on
+disk, because Vercel's filesystem is wiped on every deploy and uploaded files
+would disappear. Pages carry only a short URL — the image itself is served
+separately and cached hard, with a version stamp so a replacement shows up
+immediately.
+
+PNG with a transparent background looks best against the dark panels.
+
+## Exporting to CSV
+
+Admins get an **Export CSV** button on two pages.
+
+**Queues** gives the live state of every queue: item, both costs, position,
+member, WhatsApp handle, note. One row per person waiting.
+
+**History** gives every recorded result, newest night first: date, day type,
+status, item, cost, member, outcome, bullets, note.
+
+Both open as a download. Files are UTF-8 with a byte-order mark, so names like
+冰仔 survive opening in Excel.
 
 ## The WhatsApp announcement
 

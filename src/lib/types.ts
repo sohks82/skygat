@@ -26,9 +26,17 @@ export type Item = {
   name: string;
   cost: number;
   backup_cost: number | null;
+  /** True when an icon is stored. The image itself is fetched from its own route. */
+  has_icon: boolean;
+  icon_version: string | null;
   sort_order: number;
   active: boolean;
 };
+
+/** Cache-busting URL for an item's icon. */
+export function iconUrl(item: Pick<Item, "id" | "icon_version">): string {
+  return `/api/items/${item.id}/icon?v=${encodeURIComponent(item.icon_version ?? "0")}`;
+}
 
 export type QueueRow = {
   id: number;

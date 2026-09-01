@@ -10,7 +10,13 @@ export default async function QueuesPage() {
 
   return (
     <>
-      <PageHead eyebrow="Who's waiting for what" title="Queues" />
+      <PageHead eyebrow="Who's waiting for what" title="Queues">
+        {admin ? (
+          <a href="/api/export/queues" className="btn" download>
+            Export CSV
+          </a>
+        ) : null}
+      </PageHead>
       {admin ? (
         <p className="mb-5 max-w-2xl text-sm text-muted">
           Position 1 is next in line. Recording a win removes that member from the item&apos;s queue

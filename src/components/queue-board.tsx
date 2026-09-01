@@ -1,6 +1,6 @@
 import { joinQueueAction, leaveQueueAction, moveQueueAction } from "@/app/actions";
 import { Bullets } from "@/components/ui";
-import type { ItemWithQueue, Member } from "@/lib/types";
+import { iconUrl, type ItemWithQueue, type Member } from "@/lib/types";
 
 export function QueueBoard({
   items,
@@ -40,7 +40,11 @@ function QueueCard({
   return (
     <section className="panel flex flex-col">
       <header className="flex items-start justify-between gap-3 border-b border-line px-3.5 py-3">
-        <div className="min-w-0">
+        {item.has_icon ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={iconUrl(item)} alt="" className="mt-0.5 h-8 w-8 shrink-0 object-contain" />
+        ) : null}
+        <div className="min-w-0 flex-1">
           <h2 className="truncate font-display text-[1.05rem] font-semibold leading-tight">{item.name}</h2>
           <Bullets n={item.cost} />
         </div>
