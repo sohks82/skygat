@@ -279,6 +279,62 @@ To add an eighth: copy a block in `src/app/globals.css`, change the tokens, then
 add the name to `THEMES` and a font and `themeColor` entry in
 `src/app/layout.tsx`.
 
+## Changing the URL
+
+Your address is the Vercel **project name** plus `.vercel.app`, so renaming the
+project renames the site.
+
+Vercel → **Settings → General → Project Name** → set it to `skygateauction` →
+Save. The site is then at `skygateauction.vercel.app`.
+
+Subdomains are lowercase; `skygateAuction` becomes `skygateauction`. If the name
+is taken, pick another — it is global across all of Vercel.
+
+The old `*.vercel.app` address stops working, so send the new link round. Nothing
+else needs changing: the database, environment variables and deployments all
+carry over.
+
+For a real domain (`skygat.gg`, say), buy it anywhere and add it under
+**Settings → Domains**. Vercel shows the DNS records to set. Free on the Hobby
+plan; you only pay the registrar.
+
+## Switching database provider
+
+The app talks to any Postgres through `postgres.js`, so moving between providers
+is a `DATABASE_URL` change and nothing else. Neon and Supabase both work, as does
+anything else that speaks Postgres.
+
+Neon is fine for this workload and there is no technical reason to move. If you
+want Supabase anyway:
+
+1. **Create the project** at [supabase.com](https://supabase.com) → New Project.
+   Save the database password it shows you; it is not shown again.
+2. **Copy the pooled connection string.** Project Settings → Database →
+   Connection string → **Transaction pooler**, port **6543**. Use the pooler, not
+   the direct connection on 5432 — serverless functions open and drop
+   connections constantly and will exhaust a direct database.
+3. **Create the tables.** With that URL in `.env` locally:
+   ```bash
+   npm run db:setup
+   npm run db:migrate
+   ```
+   Or paste `db/schema.sql` into Supabase's SQL Editor.
+4. **Move the data.** From a machine with `pg_dump`:
+   ```bash
+   pg_dump --data-only --no-owner "<neon-url>" > data.sql
+   psql "<supabase-pooler-url>" < data.sql
+   ```
+   Or, with no data worth keeping, re-run `npm run db:import` and re-enter the
+   WhatsApp handles and icons.
+5. **Point Vercel at it.** Replace `DATABASE_URL` with the Supabase pooler URL,
+   then redeploy.
+6. **Check it.** Open the site and confirm the queues look right before deleting
+   anything in Neon. Keep the Neon database for a week as a fallback.
+
+Supabase pauses a free project after a week of no traffic; it wakes on the next
+request, with the first one slow. At an auction every 2–3 days you will not hit
+it.
+
 ## Stack
 
 Next.js 15 (App Router, server actions) · Neon Postgres · Tailwind v4 · Vercel.

@@ -16,23 +16,64 @@ import { isAdmin } from "@/lib/auth";
 import { ALLIANCE_NAME, THEME, type Theme } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-jetbrains" });
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
+});
 
 /**
- * One display face per theme, each exposed under the same variable name. Only
- * the active theme's class reaches the markup, so only its font is fetched.
+ * One display face per theme, all exposed under the same variable name so the
+ * stylesheet never needs to know which is active.
+ *
+ * next/font requires each loader to be called and assigned to its own const at
+ * module scope, with literal arguments — they are read by static analysis at
+ * build time, not evaluated. Hence the repetition below.
  */
-const W = ["400", "500", "600", "700"] as const;
-const V = "--font-display-face";
+const barlow = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const grotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display-face",
+});
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const saira = Saira_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const plex = IBM_Plex_Sans_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
 
 const DISPLAY: Record<Theme, { variable: string }> = {
-  brass: Barlow_Condensed({ subsets: ["latin"], weight: [...W], variable: V }),
-  jade: Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: V }),
-  crimson: Oswald({ subsets: ["latin"], weight: [...W], variable: V }),
-  azure: Rajdhani({ subsets: ["latin"], weight: [...W], variable: V }),
-  orchid: Archivo({ subsets: ["latin"], weight: [...W], variable: V }),
-  sand: Saira_Condensed({ subsets: ["latin"], weight: [...W], variable: V }),
-  slate: IBM_Plex_Sans_Condensed({ subsets: ["latin"], weight: [...W], variable: V }),
+  brass: barlow,
+  jade: grotesk,
+  crimson: oswald,
+  azure: rajdhani,
+  orchid: archivo,
+  sand: saira,
+  slate: plex,
 };
 
 export const metadata: Metadata = {

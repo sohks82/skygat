@@ -8,7 +8,7 @@
  * hand in the app keeps its id.
  */
 import { readFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 import "dotenv/config";
 
 const args = process.argv.slice(2);
@@ -17,7 +17,9 @@ const file = args.find((a) => !a.startsWith("--")) ?? "db/seed-source.csv";
 
 // --dry parses the sheet and reports what it found without writing anything.
 let fakeId = 0;
-const sql = dry ? async () => [{ id: ++fakeId }] : neon(process.env.DATABASE_URL);
+const sql = dry
+  ? async () => [{ id: ++fakeId }]
+  : postgres(process.env.DATABASE_URL, { max: 1, prepare: false, onnotice: () => {}, ssl: /sslmode=disable|localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? false : "require" });
 
 /* ------------------------------- csv parsing ------------------------------ */
 
@@ -327,3 +329,5 @@ for (const night of nights) {
 }
 console.log(`✓ ${nights.length} nights, ${lineCount} result lines`);
 console.log("\nImport complete.");
+
+if (!dry) await sql.end();

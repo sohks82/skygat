@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 import "dotenv/config";
 
 if (!process.env.DATABASE_URL) {
@@ -21,7 +21,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
-const sql = neon(process.env.DATABASE_URL);
+const sql = postgres(process.env.DATABASE_URL, { max: 1, prepare: false, onnotice: () => {}, ssl: /sslmode=disable|localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? false : "require" });
 const raw = readFileSync(join(here, "..", "db", "schema.sql"), "utf8");
 
 // Strip whole-line comments first. Without this, a comment sitting above a
@@ -40,13 +40,17 @@ for (const statement of statements) {
   const label = statement.replace(/\s+/g, " ").slice(0, 64);
   try {
     // The HTTP driver has no .query() — call it directly with a text + params pair.
-    await sql(statement, []);
+    await sql.unsafe(statement);
     console.log(`  ✓ ${label}`);
     applied++;
   } catch (err) {
     console.error(`  ✗ ${label}\n\n    ${err.message}\n`);
+    await sql.end();
     process.exit(1);
   }
 }
 
 console.log(`\nSchema applied — ${applied} statements. Next: npm run db:import`);
+
+// postgres.js holds the pool open, so the process needs an explicit close.
+await sql.end();

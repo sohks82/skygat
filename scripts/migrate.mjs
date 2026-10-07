@@ -8,7 +8,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 import "dotenv/config";
 
 if (!process.env.DATABASE_URL) {
@@ -18,7 +18,7 @@ if (!process.env.DATABASE_URL) {
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dir = join(here, "..", "db", "migrations");
-const sql = neon(process.env.DATABASE_URL);
+const sql = postgres(process.env.DATABASE_URL, { max: 1, prepare: false, onnotice: () => {}, ssl: /sslmode=disable|localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? false : "require" });
 
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
 console.log(`Applying ${files.length} migration file(s)…\n`);
@@ -32,13 +32,16 @@ for (const file of files) {
 
   for (const statement of statements) {
     try {
-      await sql(statement, []);
+      await sql.unsafe(statement);
       console.log(`  ✓ ${statement.replace(/\s+/g, " ").slice(0, 64)}`);
     } catch (err) {
       console.error(`  ✗ ${file}\n\n    ${err.message}\n`);
+      await sql.end();
       process.exit(1);
     }
   }
 }
 
 console.log("\nMigrations applied.");
+
+await sql.end();
