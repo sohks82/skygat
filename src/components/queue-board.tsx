@@ -65,7 +65,7 @@ function QueueCard({
               <li
                 key={q.id}
                 className={`flex items-center gap-2.5 py-1.5 pl-3 pr-2 ${
-                  next ? "border-l-2 border-l-accent bg-accent/[0.055]" : "border-l-2 border-l-transparent"
+                  next ? "border-l-2 border-l-accent row-next" : "border-l-2 border-l-transparent"
                 }`}
               >
                 <span

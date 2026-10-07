@@ -11,6 +11,9 @@ const BLURB: Record<Theme, string> = {
   orchid: "Plum with magenta and teal. Archivo.",
   sand: "Sepia with pale gold. Saira Condensed.",
   slate: "Graphite with silver, near monochrome. IBM Plex Sans Condensed.",
+  paper: "White, rounded cards, soft shadows, sentence case. Outfit.",
+  royal: "Royal blue surfaces with gold. Playfair Display, a serif.",
+  sunburst: "Bright yellow page, white panels, deep orange. Figtree.",
 };
 
 /** Written out in full so Tailwind keeps these classes at build time. */
@@ -54,7 +57,7 @@ export default function ThemesPage() {
                   2200<span className="ml-1 text-accent-dim">BLT</span>
                 </span>
               </div>
-              <div className="flex items-center gap-2 border-l-2 border-l-accent bg-accent/[0.055] py-1 pl-2 pr-2">
+              <div className="flex items-center gap-2 border-l-2 border-l-accent row-next py-1 pl-2 pr-2">
                 <span className="w-3 text-right font-mono text-[0.7rem] text-accent">1</span>
                 <span className="flex-1 truncate text-xs text-ink">Taemin</span>
                 <span className="chip text-accent">Next</span>

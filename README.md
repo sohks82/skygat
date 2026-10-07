@@ -254,7 +254,7 @@ against separate data.
 
 ## Themes
 
-`THEME` picks one of seven. An unrecognised value falls back to `brass`. Visit
+`THEME` picks one of ten. An unrecognised value falls back to `brass`. Visit
 **/themes** in the running app to see them all side by side.
 
 | `THEME` | Look | Display face |
@@ -266,18 +266,38 @@ against separate data.
 | `orchid` | Plum with magenta and teal | Archivo |
 | `sand` | Sepia with pale gold | Saira Condensed |
 | `slate` | Graphite with silver, near monochrome | IBM Plex Sans Condensed |
+| `paper` | **White, soft and rounded** — the one that changes shape too | Outfit |
+| `royal` | **Royal blue** surfaces with gold | Playfair Display |
+| `sunburst` | **Bright yellow** page, white panels, deep orange | Figtree |
 
 Each theme sets eleven colour tokens plus its own display type, so the themes
 read as different products rather than one app recoloured. Only the active
 theme's font is downloaded.
 
+`paper` is the one theme that changes *shape*, not just colour. Everything else
+in the set is a dense console — hairline borders, 4px corners, uppercase
+letter-spaced labels. Paper is a light modern dashboard instead: 12px rounded
+cards, soft shadows doing the separation instead of borders, sentence case
+rather than uppercase, pill-shaped chips and roomier controls. Use it if the
+console look is not what you want.
+
+`paper` and `sunburst` are the light ones. `royal` is dark but its surfaces are
+actually blue rather than near-black, so it reads differently from `azure`.
+
+Surface values — placeholder colour, hover edges, button hover fill, the next-up
+row tint — are derived from each theme's own tokens, so a new theme normally only
+declares its eleven colours. Light themes additionally set `--scheme: light`,
+`--btn-primary-ink` and a stronger `--row-next-mix`, grouped in one block.
+
 Every text colour in every theme clears WCAG AA contrast against its background,
 and each theme keeps its accent and its danger colour at least 30° apart in hue
 so an alert never reads as a highlight.
 
-To add an eighth: copy a block in `src/app/globals.css`, change the tokens, then
-add the name to `THEMES` and a font and `themeColor` entry in
-`src/app/layout.tsx`.
+To add another: copy a block in `src/app/globals.css`, change the tokens, then
+add the name to `THEMES` in `src/lib/config.ts` and a font const plus a
+`themeColor` entry in `src/app/layout.tsx`. Font loaders must each be assigned to
+their own module-scope `const` with literal arguments — `next/font` reads them by
+static analysis and rejects anything else.
 
 ## Changing the URL
 

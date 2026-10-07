@@ -18,14 +18,26 @@
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
+/* Surface values derived from whichever theme is active, so a new theme only
+   has to declare its eleven colours. --btn-primary-ink and --scheme are the
+   exceptions: they depend on whether the theme is light or dark. */
+:root {
+  --placeholder: color-mix(in srgb, var(--color-muted) 72%, var(--color-void));
+  --edge-hover: color-mix(in srgb, var(--color-line) 62%, var(--color-ink));
+  --btn-hover: color-mix(in srgb, var(--color-panel2) 88%, var(--color-ink));
+  --row-next-mix: 5.5%;
+  --btn-primary-ink: #171106;
+  --scheme: dark;
+}
+
 @layer base {
   html {
     background: var(--color-void);
-    color-scheme: dark;
+    color-scheme: var(--scheme);
   }
   body {
     background:
-      radial-gradient(1100px 500px at 15% -12%, #18242f 0%, transparent 60%),
+      radial-gradient(1100px 500px at 15% -12%, var(--glow, transparent) 0%, transparent 60%),
       var(--color-void);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -40,7 +52,7 @@
     outline-offset: 2px;
     border-radius: 3px;
   }
-  ::placeholder { color: #5d7288; }
+  ::placeholder { color: var(--placeholder); }
 }
 
 @layer components {
@@ -69,7 +81,7 @@
     font-size: 0.875rem;
     color: var(--color-ink);
   }
-  .field:hover { border-color: #3a4d5f; }
+  .field:hover { border-color: var(--edge-hover); }
 
   .btn {
     display: inline-flex;
@@ -88,16 +100,19 @@
     cursor: pointer;
     transition: background 120ms ease, border-color 120ms ease;
   }
-  .btn:hover { background: #24313e; border-color: #3a4d5f; }
+  .btn:hover { background: var(--btn-hover); border-color: var(--edge-hover); }
   .btn-primary {
     background: var(--color-accent);
     border-color: var(--color-accent);
-    color: #171106;
+    color: var(--btn-primary-ink);
   }
-  .btn-primary:hover { background: #e8b551; }
+  .btn-primary:hover { filter: brightness(1.08); }
   .btn-ghost { background: transparent; border-color: transparent; color: var(--color-muted); }
   .btn-ghost:hover { color: var(--color-ink); background: var(--color-panel2); }
   .btn-tiny { padding: 0.2rem 0.4rem; font-size: 0.68rem; }
+
+  /* Next-up row tint. Light themes need more of it to read at all. */
+  .row-next { background: color-mix(in srgb, var(--color-accent) var(--row-next-mix), transparent); }
 
   .chip {
     font-family: var(--font-display);
@@ -133,7 +148,7 @@
   --color-ink: #e6edf4;
   --color-muted: #8398ac;
   --color-accent: #d9a441;
-  --color-accent-dim: #6b5324;
+  --color-accent-dim: #8f6e2e;
   --color-signal: #56c2d6;
   --color-danger: #e3685d;
   --color-ok: #5fb98c;
@@ -149,7 +164,7 @@
   --color-ink: #e8ebf5;
   --color-muted: #8e96bb;
   --color-accent: #4ec9a0;
-  --color-accent-dim: #2a6b55;
+  --color-accent-dim: #328066;
   --color-signal: #9b8cf0;
   --color-danger: #e0646a;
   --color-ok: #4ec9a0;
@@ -165,7 +180,7 @@
   --color-ink: #f2e9e6;
   --color-muted: #a89590;
   --color-accent: #e59040;
-  --color-accent-dim: #6b4420;
+  --color-accent-dim: #9d632d;
   --color-signal: #7fb8cc;
   --color-danger: #e8456b;
   --color-ok: #7fb069;
@@ -181,7 +196,7 @@
   --color-ink: #e4edf8;
   --color-muted: #7d93b0;
   --color-accent: #4da3ff;
-  --color-accent-dim: #1f4f80;
+  --color-accent-dim: #3374b8;
   --color-signal: #5ce1e6;
   --color-danger: #ff6b6b;
   --color-ok: #4fd1a5;
@@ -197,7 +212,7 @@
   --color-ink: #f0e8f7;
   --color-muted: #a08fb5;
   --color-accent: #cf6fd4;
-  --color-accent-dim: #5e2f62;
+  --color-accent-dim: #a054a4;
   --color-signal: #6fd4cf;
   --color-danger: #e8606b;
   --color-ok: #7fd48f;
@@ -213,7 +228,7 @@
   --color-ink: #f4ede0;
   --color-muted: #a89a80;
   --color-accent: #e8c87a;
-  --color-accent-dim: #6b5a33;
+  --color-accent-dim: #847041;
   --color-signal: #8fbf9f;
   --color-danger: #d9705c;
   --color-ok: #9fbf6f;
@@ -229,12 +244,123 @@
   --color-ink: #eceff1;
   --color-muted: #8b9499;
   --color-accent: #c9d6dd;
-  --color-accent-dim: #5a656b;
+  --color-accent-dim: #677379;
   --color-signal: #7fb3c8;
   --color-danger: #d97a6c;
   --color-ok: #8fbf9f;
   --glow: #1d2225;
 }
+
+
+/* paper — white page, near-black text, dark amber. The only light theme. */
+[data-theme="paper"] {
+  --color-void: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel2: #f1f5f9;
+  --color-line: #e3e9f0;
+  --color-ink: #121a24;
+  --color-muted: #59687a;
+  --color-accent: #9a6300;
+  --color-accent-dim: #7b5516;
+  --color-signal: #0d6080;
+  --color-danger: #b3261e;
+  --color-ok: #1b6b42;
+  --glow: #eef4fb;
+}
+
+/* A light theme needs more than inverted tokens — these all assume a dark
+   surface and have to be reversed explicitly. */
+
+/* royal — royal blue surfaces with gold. The whole UI reads blue, not black. */
+[data-theme="royal"] {
+  --color-void: #0a1838;
+  --color-panel: #132454;
+  --color-panel2: #1c3270;
+  --color-line: #2c4694;
+  --color-ink: #eaf0ff;
+  --color-muted: #9fb3e4;
+  --color-accent: #ffd24a;
+  --color-accent-dim: #b08f2a;
+  --color-signal: #74d7ff;
+  --color-danger: #ff8a95;
+  --color-ok: #6ee7a8;
+  --glow: #17306e;
+}
+
+/* sunburst — bright yellow page, white panels, deep orange. Light. */
+[data-theme="sunburst"] {
+  --color-void: #ffe94a;
+  --color-panel: #fffdf4;
+  --color-panel2: #fff6cc;
+  --color-line: #d4bd3c;
+  --color-ink: #1a1710;
+  --color-muted: #6b6243;
+  --color-accent: #a34b00;
+  --color-accent-dim: #8a5a1d;
+  --color-signal: #0b5f8a;
+  --color-danger:#b01250;
+  --color-ok: #1b6b42;
+  --glow: #fff39a;
+}
+
+/* Light themes: flip the colour scheme, lift the row tint, and put light text
+   on the primary button because their accents are dark. */
+[data-theme="paper"],
+[data-theme="sunburst"] {
+  --scheme: light;
+  --btn-primary-ink: #ffffff;
+  --row-next-mix: 9%;
+  --btn-hover: color-mix(in srgb, var(--color-panel2) 92%, var(--color-ink));
+}
+
+/* Playfair is a serif among sans faces — it needs less tracking to stay even. */
+[data-theme="royal"] .eyebrow { letter-spacing: 0.17em; }
+[data-theme="royal"] .btn { letter-spacing: 0.07em; }
+[data-theme="royal"] .chip { letter-spacing: 0.12em; }
+
+/* paper is the one theme that changes shape, not just colour. The rest of the
+   set is a dense console: hairline borders, 4px corners, uppercase tracked
+   labels. Here it becomes a light modern dashboard — rounded cards, soft
+   shadows, sentence case, more air. */
+[data-theme="paper"] .panel {
+  border-radius: 12px;
+  border-color: #e7ecf2;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 6px 16px rgba(16, 24, 40, 0.05);
+}
+[data-theme="paper"] .eyebrow {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+[data-theme="paper"] .btn {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 9px;
+  padding: 0.5rem 0.95rem;
+}
+[data-theme="paper"] .btn-tiny { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+[data-theme="paper"] .btn-primary {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1);
+}
+[data-theme="paper"] .chip {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+}
+[data-theme="paper"] .field {
+  border-radius: 9px;
+  padding: 0.55rem 0.75rem;
+}
+[data-theme="paper"] h1 { letter-spacing: -0.02em; }
+[data-theme="paper"] h2, [data-theme="paper"] h3 { letter-spacing: -0.01em; }
 
 /* Every theme paints the page with its own top-left wash. */
 [data-theme] body {

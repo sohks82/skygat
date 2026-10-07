@@ -6,6 +6,9 @@ import {
   Inter,
   JetBrains_Mono,
   Oswald,
+  Outfit,
+  Playfair_Display,
+  Figtree,
   Rajdhani,
   Saira_Condensed,
   Space_Grotesk,
@@ -65,6 +68,21 @@ const plex = IBM_Plex_Sans_Condensed({
   weight: ["400", "500", "600", "700"],
   variable: "--font-display-face",
 });
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display-face",
+});
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-face",
+});
 
 const DISPLAY: Record<Theme, { variable: string }> = {
   brass: barlow,
@@ -74,6 +92,9 @@ const DISPLAY: Record<Theme, { variable: string }> = {
   orchid: archivo,
   sand: saira,
   slate: plex,
+  paper: outfit,
+  royal: playfair,
+  sunburst: figtree,
 };
 
 export const metadata: Metadata = {
@@ -89,6 +110,9 @@ const THEME_COLOR: Record<Theme, string> = {
   orchid: "#150f1c",
   sand: "#16130d",
   slate: "#101214",
+  paper: "#ffffff",
+  royal: "#0a1838",
+  sunburst: "#ffe94a",
 };
 
 export const viewport: Viewport = { themeColor: THEME_COLOR[THEME] };

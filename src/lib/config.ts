@@ -6,7 +6,7 @@
  * Read only from server components and server actions.
  */
 
-export const THEMES = ["brass", "jade", "crimson", "azure", "orchid", "sand", "slate"] as const;
+export const THEMES = ["brass", "jade", "crimson", "azure", "orchid", "sand", "slate", "paper", "royal", "sunburst"] as const;
 export type Theme = (typeof THEMES)[number];
 
 function env(name: string): string | undefined {
