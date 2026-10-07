@@ -1,4 +1,7 @@
-import { THEME, THEMES, type Theme } from "@/lib/config";
+import { THEMES, type Theme } from "@/lib/config";
+import { getSettings } from "@/lib/settings";
+import { isAdmin } from "@/lib/auth";
+import { setAllianceNameAction, setThemeAction } from "@/app/actions";
 import { PageHead } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -26,15 +29,39 @@ const SWATCHES = [
   { label: "panel2", className: "bg-panel2" },
 ] as const;
 
-export default function ThemesPage() {
+export default async function ThemesPage() {
+  const [admin, { theme: active, allianceName }] = await Promise.all([isAdmin(), getSettings()]);
+
   return (
     <>
-      <PageHead eyebrow="Set THEME in the environment" title="Themes" />
+      <PageHead eyebrow="Name and theme" title="Appearance" />
+
+      {admin ? (
+        <form
+          action={setAllianceNameAction}
+          className="panel mb-6 grid gap-2 p-3 sm:grid-cols-[1fr_auto]"
+        >
+          <input
+            name="alliance_name"
+            defaultValue={allianceName}
+            maxLength={40}
+            className="field"
+            placeholder="Alliance name"
+            required
+          />
+          <button className="btn btn-primary">Save name</button>
+          <p className="text-xs text-muted sm:col-span-2">
+            Shown in the header and the browser tab. Takes effect immediately.
+          </p>
+        </form>
+      ) : null}
 
       <p className="mb-6 max-w-2xl text-sm text-muted">
-        Each alliance deployment picks one. Swatches below are live — the colours are exactly what
-        that theme renders. Type faces differ too, but only the active theme&apos;s font is
-        downloaded, so every card here is drawn in {THEME}&apos;s face.
+        {admin
+          ? "Pick a theme and it applies straight away — no redeploy. The swatches are live, so the colours below are exactly what each one renders."
+          : "The swatches below are live — these are exactly the colours each theme renders."}{" "}
+        Type faces differ too, but only the active theme&apos;s font is downloaded, so every card
+        here is drawn in {active}&apos;s face.
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -44,7 +71,7 @@ export default function ThemesPage() {
               <h2 className="font-display text-lg font-semibold uppercase tracking-[0.14em] text-ink">
                 {name}
               </h2>
-              {name === THEME ? <span className="chip text-accent">Active</span> : null}
+              {name === active ? <span className="chip text-accent">Active</span> : null}
             </div>
 
             <p className="mb-3 text-xs text-muted">{BLURB[name]}</p>
@@ -78,7 +105,16 @@ export default function ThemesPage() {
               ))}
             </div>
 
-            <code className="mt-3 block font-mono text-[0.68rem] text-muted">THEME={name}</code>
+            {admin && name !== active ? (
+              <form action={setThemeAction} className="mt-3">
+                <input type="hidden" name="theme" value={name} />
+                <button className="btn w-full justify-center">Use {name}</button>
+              </form>
+            ) : (
+              <code className="mt-3 block font-mono text-[0.68rem] text-muted">
+                {name === active ? "in use" : `THEME=${name}`}
+              </code>
+            )}
           </div>
         ))}
       </div>

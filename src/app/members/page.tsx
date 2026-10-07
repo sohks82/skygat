@@ -6,17 +6,19 @@ import {
 } from "@/app/actions";
 import { isAdmin } from "@/lib/auth";
 import { getMemberStats, getMembers, getQueues } from "@/lib/data";
-import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
+import { MEMBER_LIMIT } from "@/lib/config";
+import { getSettings } from "@/lib/settings";
 import { Empty, PageHead } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function MembersPage() {
-  const [admin, members, queues, stats] = await Promise.all([
+  const [admin, members, queues, stats, { allianceName }] = await Promise.all([
     isAdmin(),
     getMembers(),
     getQueues(),
     getMemberStats(),
+    getSettings(),
   ]);
 
   const active = members.filter((m) => m.active);
@@ -47,7 +49,7 @@ export default async function MembersPage() {
           </button>
           {full ? (
             <p className="text-xs text-danger sm:col-span-3">
-              {ALLIANCE_NAME} caps at {MEMBER_LIMIT}. Retire someone below to free a slot.
+              {allianceName} caps at {MEMBER_LIMIT}. Retire someone below to free a slot.
             </p>
           ) : null}
         </form>

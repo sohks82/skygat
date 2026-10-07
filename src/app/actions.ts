@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
 import { requireAdmin, signIn, signOut } from "@/lib/auth";
 import { defaultStartFor, type DayType } from "@/lib/types";
-import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
+import { MEMBER_LIMIT, THEMES } from "@/lib/config";
+import { getSettings } from "@/lib/settings";
 
 function str(fd: FormData, key: string): string {
   return String(fd.get(key) ?? "").trim();
@@ -54,7 +55,7 @@ export async function addMemberAction(fd: FormData) {
 
   const [{ n }] = (await sql`select count(*)::int as n from members where active`) as { n: number }[];
   if (n >= MEMBER_LIMIT) {
-    throw new Error(`${ALLIANCE_NAME} is full at ${MEMBER_LIMIT} active members. Retire someone first.`);
+    throw new Error(`${(await getSettings()).allianceName} is full at ${MEMBER_LIMIT} active members. Retire someone first.`);
   }
 
   const aliases = str(fd, "aliases").split(",").map((a) => a.trim()).filter(Boolean);
@@ -90,7 +91,9 @@ export async function setMemberActiveAction(fd: FormData) {
 
   if (active) {
     const [{ n }] = (await sql`select count(*)::int as n from members where active`) as { n: number }[];
-    if (n >= MEMBER_LIMIT) throw new Error(`${ALLIANCE_NAME} is full at ${MEMBER_LIMIT} active members.`);
+    if (n >= MEMBER_LIMIT) {
+      throw new Error(`${(await getSettings()).allianceName} is full at ${MEMBER_LIMIT} active members.`);
+    }
   } else {
     const items = (await sql`select distinct item_id from queue_entries where member_id = ${id}`) as {
       item_id: number;
@@ -325,5 +328,32 @@ export async function addResultAction(fd: FormData) {
 export async function deleteResultAction(fd: FormData) {
   await requireAdmin();
   await sql`delete from results where id = ${num(fd, "id")}`;
+  refreshAll();
+}
+
+/* -------------------------------- settings ------------------------------- */
+
+async function putSetting(key: string, value: string) {
+  await sql`
+    insert into settings (key, value) values (${key}, ${value})
+    on conflict (key) do update set value = excluded.value, updated_at = now()
+  `;
+}
+
+/** Applies a theme immediately — no redeploy, no environment variable. */
+export async function setThemeAction(fd: FormData) {
+  await requireAdmin();
+  const theme = str(fd, "theme").toLowerCase();
+  if (!(THEMES as readonly string[]).includes(theme)) throw new Error("Unknown theme.");
+  await putSetting("theme", theme);
+  refreshAll();
+}
+
+export async function setAllianceNameAction(fd: FormData) {
+  await requireAdmin();
+  const name = str(fd, "alliance_name");
+  if (!name) throw new Error("Give the alliance a name.");
+  if (name.length > 40) throw new Error("That name is too long for the header.");
+  await putSetting("alliance_name", name);
   refreshAll();
 }

@@ -57,3 +57,9 @@ create table if not exists results (
 );
 create index if not exists results_auction on results (auction_id);
 create index if not exists results_member on results (member_id);
+
+create table if not exists settings (
+  key        text primary key,
+  value      text not null,
+  updated_at timestamptz not null default now()
+);

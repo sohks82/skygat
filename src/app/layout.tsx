@@ -16,7 +16,8 @@ import {
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { isAdmin } from "@/lib/auth";
-import { ALLIANCE_NAME, THEME, type Theme } from "@/lib/config";
+import { type Theme } from "@/lib/config";
+import { getSettings } from "@/lib/settings";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({
@@ -97,10 +98,13 @@ const DISPLAY: Record<Theme, { variable: string }> = {
   sunburst: figtree,
 };
 
-export const metadata: Metadata = {
-  title: `${ALLIANCE_NAME} — Auction Control`,
-  description: `Queues, items and auction results for the ${ALLIANCE_NAME} alliance.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { allianceName } = await getSettings();
+  return {
+    title: `${allianceName} — Auction Control`,
+    description: `Queues, items and auction results for the ${allianceName} alliance.`,
+  };
+}
 
 const THEME_COLOR: Record<Theme, string> = {
   brass: "#0e141b",
@@ -115,15 +119,18 @@ const THEME_COLOR: Record<Theme, string> = {
   sunburst: "#ffe94a",
 };
 
-export const viewport: Viewport = { themeColor: THEME_COLOR[THEME] };
+export async function generateViewport(): Promise<Viewport> {
+  const { theme } = await getSettings();
+  return { themeColor: THEME_COLOR[theme] };
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const admin = await isAdmin();
+  const [admin, { theme }] = await Promise.all([isAdmin(), getSettings()]);
   return (
     <html
       lang="en"
-      data-theme={THEME}
-      className={`${DISPLAY[THEME].variable} ${inter.variable} ${jetbrains.variable}`}
+      data-theme={theme}
+      className={`${DISPLAY[theme].variable} ${inter.variable} ${jetbrains.variable}`}
     >
       <body className="min-h-screen">
         <Nav admin={admin} />

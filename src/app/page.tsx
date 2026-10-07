@@ -2,7 +2,8 @@ import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { getActiveMemberCount, getMembers, getQueues, getUpcomingAuction } from "@/lib/data";
 import { formatDate, formatDayName } from "@/lib/types";
-import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
+import { MEMBER_LIMIT } from "@/lib/config";
+import { getSettings } from "@/lib/settings";
 import { QueueBoard } from "@/components/queue-board";
 import { Countdown } from "@/components/countdown";
 import { DayChip, PageHead } from "@/components/ui";
@@ -10,19 +11,20 @@ import { DayChip, PageHead } from "@/components/ui";
 export const dynamic = "force-dynamic";
 
 export default async function BoardPage() {
-  const [admin, queues, members, activeCount, next] = await Promise.all([
+  const [admin, queues, members, activeCount, next, { allianceName }] = await Promise.all([
     isAdmin(),
     getQueues(),
     getMembers(),
     getActiveMemberCount(),
     getUpcomingAuction(),
+    getSettings(),
   ]);
 
   const queued = new Set(queues.flatMap((i) => i.queue.map((q) => q.member_id))).size;
 
   return (
     <>
-      <PageHead eyebrow={`${ALLIANCE_NAME} alliance`} title="Board">
+      <PageHead eyebrow={`${allianceName} alliance`} title="Board">
         <Link href="/queues" className="btn">
           Full queues
         </Link>

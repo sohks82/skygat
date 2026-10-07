@@ -176,7 +176,17 @@ alter table items add column if not exists backup_cost integer;
 -- 002, item icons
 alter table items add column if not exists icon text;
 alter table items add column if not exists icon_updated_at timestamptz;
+
+-- 003, in-app settings
+create table if not exists settings (
+  key        text primary key,
+  value      text not null,
+  updated_at timestamptz not null default now()
+);
 ```
+
+If migration 003 has not been run, the app still works — it falls back to the
+environment defaults rather than erroring.
 
 ## Item icons
 
@@ -253,6 +263,14 @@ the same commit produces a steel-and-brass SkyGat and an indigo-and-jade SkyGat2
 against separate data.
 
 ## Themes
+
+**Admins change the theme and the alliance name from inside the app** — open
+**Appearance** in the nav, click a theme, done. No redeploy, no environment
+variable. The setting is stored in the database.
+
+`THEME` and `ALLIANCE_NAME` in the environment are the *defaults*, used until
+someone picks something in the app. They stay useful for giving a second
+alliance a different starting look.
 
 `THEME` picks one of ten. An unrecognised value falls back to `brass`. Visit
 **/themes** in the running app to see them all side by side.
