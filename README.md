@@ -220,6 +220,65 @@ above the box.
 The **backup cost** field on the Items page sets the price quoted to the second
 person. Leave it blank and the main cost is used for both slots.
 
+## Running a second alliance
+
+One codebase serves any number of alliances. Each gets its own Vercel project,
+its own Neon database and its own settings, so a fix made once reaches all of
+them — there is no second repo to keep in step.
+
+To add SkyGat2:
+
+1. **New Neon database.** In Neon, create a second project (or a second database
+   in the same project). Do not reuse the first — the two alliances must not
+   share a roster.
+2. **New Vercel project.** Import the *same* GitHub repo again at
+   [vercel.com/new](https://vercel.com/new), naming it `skygat2`. Leave Root
+   Directory blank. It gets its own URL.
+3. **Attach the new database** via Storage, so `DATABASE_URL` points at it.
+4. **Set the environment variables** below, for Production.
+5. **Create the tables** by pasting `db/schema.sql` into Neon's SQL Editor for
+   the new database. Skip `db:import` — that loads the first alliance's sheet.
+
+| Variable | SkyGat | SkyGat2 |
+| --- | --- | --- |
+| `DATABASE_URL` | first Neon database | **second** Neon database |
+| `ADMIN_PIN` | its own | its own |
+| `AUTH_SECRET` | its own | its own |
+| `ALLIANCE_NAME` | `SkyGat` (or unset) | `SkyGat2` |
+| `THEME` | `brass` (or unset) | `jade` |
+| `MEMBER_LIMIT` | `25` (or unset) | whatever that alliance runs |
+
+Pushing to `main` now rebuilds both projects. Each reads its own variables, so
+the same commit produces a steel-and-brass SkyGat and an indigo-and-jade SkyGat2
+against separate data.
+
+## Themes
+
+`THEME` picks one of seven. An unrecognised value falls back to `brass`. Visit
+**/themes** in the running app to see them all side by side.
+
+| `THEME` | Look | Display face |
+| --- | --- | --- |
+| `brass` | Deep steel with warm amber (default) | Barlow Condensed |
+| `jade` | Night indigo with jade and violet | Space Grotesk |
+| `crimson` | Warm charcoal with ember and raspberry | Oswald |
+| `azure` | Deep navy with electric blue | Rajdhani |
+| `orchid` | Plum with magenta and teal | Archivo |
+| `sand` | Sepia with pale gold | Saira Condensed |
+| `slate` | Graphite with silver, near monochrome | IBM Plex Sans Condensed |
+
+Each theme sets eleven colour tokens plus its own display type, so the themes
+read as different products rather than one app recoloured. Only the active
+theme's font is downloaded.
+
+Every text colour in every theme clears WCAG AA contrast against its background,
+and each theme keeps its accent and its danger colour at least 30° apart in hue
+so an alert never reads as a highlight.
+
+To add an eighth: copy a block in `src/app/globals.css`, change the tokens, then
+add the name to `THEMES` and a font and `themeColor` entry in
+`src/app/layout.tsx`.
+
 ## Stack
 
 Next.js 15 (App Router, server actions) · Neon Postgres · Tailwind v4 · Vercel.

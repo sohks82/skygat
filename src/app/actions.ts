@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
 import { requireAdmin, signIn, signOut } from "@/lib/auth";
-import { MEMBER_LIMIT, defaultStartFor, type DayType } from "@/lib/types";
+import { defaultStartFor, type DayType } from "@/lib/types";
+import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
 
 function str(fd: FormData, key: string): string {
   return String(fd.get(key) ?? "").trim();
@@ -53,7 +54,7 @@ export async function addMemberAction(fd: FormData) {
 
   const [{ n }] = (await sql`select count(*)::int as n from members where active`) as { n: number }[];
   if (n >= MEMBER_LIMIT) {
-    throw new Error(`SkyGat is full at ${MEMBER_LIMIT} active members. Retire someone first.`);
+    throw new Error(`${ALLIANCE_NAME} is full at ${MEMBER_LIMIT} active members. Retire someone first.`);
   }
 
   const aliases = str(fd, "aliases").split(",").map((a) => a.trim()).filter(Boolean);
@@ -89,7 +90,7 @@ export async function setMemberActiveAction(fd: FormData) {
 
   if (active) {
     const [{ n }] = (await sql`select count(*)::int as n from members where active`) as { n: number }[];
-    if (n >= MEMBER_LIMIT) throw new Error(`SkyGat is full at ${MEMBER_LIMIT} active members.`);
+    if (n >= MEMBER_LIMIT) throw new Error(`${ALLIANCE_NAME} is full at ${MEMBER_LIMIT} active members.`);
   } else {
     const items = (await sql`select distinct item_id from queue_entries where member_id = ${id}`) as {
       item_id: number;

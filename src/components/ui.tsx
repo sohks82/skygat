@@ -31,9 +31,9 @@ export function Empty({ children }: { children: ReactNode }) {
 /** Bullet cost, always in the mono face so columns of numbers line up. */
 export function Bullets({ n }: { n: number }) {
   return (
-    <span className="font-mono text-[0.78rem] text-brass">
+    <span className="font-mono text-[0.78rem] text-accent">
       {n.toLocaleString()}
-      <span className="ml-1 text-[0.66rem] text-brass-dim">BLT</span>
+      <span className="ml-1 text-[0.66rem] text-accent-dim">BLT</span>
     </span>
   );
 }
@@ -41,7 +41,7 @@ export function Bullets({ n }: { n: number }) {
 const DAY_TONE: Record<string, string> = {
   War: "text-danger",
   League: "text-signal",
-  Glory: "text-brass",
+  Glory: "text-accent",
   Other: "text-muted",
 };
 

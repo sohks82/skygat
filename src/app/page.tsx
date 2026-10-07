@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { getActiveMemberCount, getMembers, getQueues, getUpcomingAuction } from "@/lib/data";
-import { MEMBER_LIMIT, formatDate, formatDayName } from "@/lib/types";
+import { formatDate, formatDayName } from "@/lib/types";
+import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
 import { QueueBoard } from "@/components/queue-board";
 import { Countdown } from "@/components/countdown";
 import { DayChip, PageHead } from "@/components/ui";
@@ -21,7 +22,7 @@ export default async function BoardPage() {
 
   return (
     <>
-      <PageHead eyebrow="SkyGat alliance" title="Board">
+      <PageHead eyebrow={`${ALLIANCE_NAME} alliance`} title="Board">
         <Link href="/queues" className="btn">
           Full queues
         </Link>
@@ -82,7 +83,7 @@ export default async function BoardPage() {
             {Array.from({ length: MEMBER_LIMIT }, (_, i) => (
               <span
                 key={i}
-                className={`h-3 w-[5px] rounded-[1px] ${i < activeCount ? "bg-brass" : "bg-line"}`}
+                className={`h-3 w-[5px] rounded-[1px] ${i < activeCount ? "bg-accent" : "bg-line"}`}
               />
             ))}
           </div>

@@ -96,7 +96,7 @@ export default async function AuctionPage({ params }: { params: Promise<{ id: st
                     <Bullets n={item.cost} />
                   </span>
                 </span>
-                <span className="font-display text-base font-semibold text-brass">
+                <span className="font-display text-base font-semibold text-accent">
                   {item.queue[0].member_name}
                 </span>
                 <button className="btn btn-primary btn-tiny">Award</button>

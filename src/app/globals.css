@@ -7,13 +7,13 @@
   --color-line: #2a3947;
   --color-ink: #e6edf4;
   --color-muted: #8398ac;
-  --color-brass: #d9a441;
-  --color-brass-dim: #6b5324;
+  --color-accent: #d9a441;
+  --color-accent-dim: #6b5324;
   --color-signal: #56c2d6;
   --color-danger: #d9564b;
   --color-ok: #5fb98c;
 
-  --font-display: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
@@ -36,7 +36,7 @@
     letter-spacing: 0.01em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-brass);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: 3px;
   }
@@ -90,8 +90,8 @@
   }
   .btn:hover { background: #24313e; border-color: #3a4d5f; }
   .btn-primary {
-    background: var(--color-brass);
-    border-color: var(--color-brass);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
     color: #171106;
   }
   .btn-primary:hover { background: #e8b551; }
@@ -114,3 +114,139 @@
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ---------------------------------------------------------------------------
+   Themes. Tailwind v4 emits utilities as var(--color-*), so overriding the
+   variables under a [data-theme] selector re-skins everything downstream.
+   The display face is loaded per deployment in layout.tsx and arrives as
+   --font-display-face, so it is not set here.
+
+   Set THEME in the environment to pick one. See /themes for a live preview.
+--------------------------------------------------------------------------- */
+
+/* brass — deep steel with warm amber */
+[data-theme="brass"] {
+  --color-void: #0e141b;
+  --color-panel: #161f29;
+  --color-panel2: #1d2833;
+  --color-line: #2a3947;
+  --color-ink: #e6edf4;
+  --color-muted: #8398ac;
+  --color-accent: #d9a441;
+  --color-accent-dim: #6b5324;
+  --color-signal: #56c2d6;
+  --color-danger: #e3685d;
+  --color-ok: #5fb98c;
+  --glow: #18242f;
+}
+
+/* jade — night indigo with jade and violet */
+[data-theme="jade"] {
+  --color-void: #0f1320;
+  --color-panel: #181d2e;
+  --color-panel2: #212840;
+  --color-line: #2f3755;
+  --color-ink: #e8ebf5;
+  --color-muted: #8e96bb;
+  --color-accent: #4ec9a0;
+  --color-accent-dim: #2a6b55;
+  --color-signal: #9b8cf0;
+  --color-danger: #e0646a;
+  --color-ok: #4ec9a0;
+  --glow: #1a2140;
+}
+
+/* crimson — warm charcoal with ember and gold */
+[data-theme="crimson"] {
+  --color-void: #15100f;
+  --color-panel: #201917;
+  --color-panel2: #2b221f;
+  --color-line: #3b2e2a;
+  --color-ink: #f2e9e6;
+  --color-muted: #a89590;
+  --color-accent: #e59040;
+  --color-accent-dim: #6b4420;
+  --color-signal: #7fb8cc;
+  --color-danger: #e8456b;
+  --color-ok: #7fb069;
+  --glow: #2a1d19;
+}
+
+/* azure — deep navy with electric blue */
+[data-theme="azure"] {
+  --color-void: #0a121c;
+  --color-panel: #121c2b;
+  --color-panel2: #1a2639;
+  --color-line: #26344b;
+  --color-ink: #e4edf8;
+  --color-muted: #7d93b0;
+  --color-accent: #4da3ff;
+  --color-accent-dim: #1f4f80;
+  --color-signal: #5ce1e6;
+  --color-danger: #ff6b6b;
+  --color-ok: #4fd1a5;
+  --glow: #15263d;
+}
+
+/* orchid — plum with magenta and teal */
+[data-theme="orchid"] {
+  --color-void: #150f1c;
+  --color-panel: #1f1829;
+  --color-panel2: #2a2037;
+  --color-line: #392c4b;
+  --color-ink: #f0e8f7;
+  --color-muted: #a08fb5;
+  --color-accent: #cf6fd4;
+  --color-accent-dim: #5e2f62;
+  --color-signal: #6fd4cf;
+  --color-danger: #e8606b;
+  --color-ok: #7fd48f;
+  --glow: #2a1b3a;
+}
+
+/* sand — sepia with pale gold */
+[data-theme="sand"] {
+  --color-void: #16130d;
+  --color-panel: #211c14;
+  --color-panel2: #2c251a;
+  --color-line: #3c3326;
+  --color-ink: #f4ede0;
+  --color-muted: #a89a80;
+  --color-accent: #e8c87a;
+  --color-accent-dim: #6b5a33;
+  --color-signal: #8fbf9f;
+  --color-danger: #d9705c;
+  --color-ok: #9fbf6f;
+  --glow: #2b2316;
+}
+
+/* slate — graphite with silver, near monochrome */
+[data-theme="slate"] {
+  --color-void: #101214;
+  --color-panel: #181b1e;
+  --color-panel2: #212528;
+  --color-line: #2e3337;
+  --color-ink: #eceff1;
+  --color-muted: #8b9499;
+  --color-accent: #c9d6dd;
+  --color-accent-dim: #5a656b;
+  --color-signal: #7fb3c8;
+  --color-danger: #d97a6c;
+  --color-ok: #8fbf9f;
+  --glow: #1d2225;
+}
+
+/* Every theme paints the page with its own top-left wash. */
+[data-theme] body {
+  background:
+    radial-gradient(1100px 500px at 15% -12%, var(--glow) 0%, transparent 60%),
+    var(--color-void);
+}
+
+/* Condensed faces take wider tracking than the geometric ones. */
+[data-theme="jade"] .eyebrow,
+[data-theme="orchid"] .eyebrow { letter-spacing: 0.16em; font-size: 0.68rem; }
+[data-theme="jade"] .btn,
+[data-theme="orchid"] .btn { letter-spacing: 0.05em; font-size: 0.76rem; }
+[data-theme="jade"] .chip,
+[data-theme="orchid"] .chip { letter-spacing: 0.1em; }

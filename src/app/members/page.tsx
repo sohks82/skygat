@@ -6,7 +6,7 @@ import {
 } from "@/app/actions";
 import { isAdmin } from "@/lib/auth";
 import { getMemberStats, getMembers, getQueues } from "@/lib/data";
-import { MEMBER_LIMIT } from "@/lib/types";
+import { ALLIANCE_NAME, MEMBER_LIMIT } from "@/lib/config";
 import { Empty, PageHead } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -47,7 +47,7 @@ export default async function MembersPage() {
           </button>
           {full ? (
             <p className="text-xs text-danger sm:col-span-3">
-              SkyGat caps at {MEMBER_LIMIT}. Retire someone below to free a slot.
+              {ALLIANCE_NAME} caps at {MEMBER_LIMIT}. Retire someone below to free a slot.
             </p>
           ) : null}
         </form>

@@ -1,5 +1,3 @@
-export const MEMBER_LIMIT = 25;
-
 export const DAY_TYPES = ["War", "League", "Glory", "Other"] as const;
 export type DayType = (typeof DAY_TYPES)[number];
 

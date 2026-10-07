@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { lockAction } from "@/app/actions";
+import { ALLIANCE_NAME } from "@/lib/config";
 
 const LINKS = [
   { href: "/", label: "Board" },
@@ -8,6 +9,7 @@ const LINKS = [
   { href: "/history", label: "History" },
   { href: "/members", label: "Members" },
   { href: "/items", label: "Items" },
+  { href: "/themes", label: "Themes" },
 ];
 
 export function Nav({ admin }: { admin: boolean }) {
@@ -15,8 +17,10 @@ export function Nav({ admin }: { admin: boolean }) {
     <header className="sticky top-0 z-20 border-b border-line bg-void/92 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
         <Link href="/" className="flex shrink-0 items-baseline gap-2">
-          <span className="font-display text-xl font-bold tracking-[0.16em] text-ink">SKYGAT</span>
-          <span className="hidden font-display text-[0.68rem] font-semibold tracking-[0.22em] text-brass sm:inline">
+          <span className="font-display text-xl font-bold tracking-[0.16em] text-ink">
+            {ALLIANCE_NAME.toUpperCase()}
+          </span>
+          <span className="hidden font-display text-[0.68rem] font-semibold tracking-[0.22em] text-accent sm:inline">
             AUCTION CONTROL
           </span>
         </Link>
@@ -36,7 +40,7 @@ export function Nav({ admin }: { admin: boolean }) {
         {admin ? (
           <form action={lockAction} className="shrink-0">
             <button className="btn btn-tiny" title="Lock editing">
-              <span className="text-brass">●</span> Admin
+              <span className="text-accent">●</span> Admin
             </button>
           </form>
         ) : (

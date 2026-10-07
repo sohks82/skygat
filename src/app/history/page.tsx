@@ -51,7 +51,7 @@ export default async function HistoryPage() {
                   <div key={r.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-3.5 py-2">
                     <span className="min-w-0 flex-1 text-sm text-ink/85">{r.item_name}</span>
                     {r.outcome === "won" ? (
-                      <span className="font-display text-base font-semibold text-brass">
+                      <span className="font-display text-base font-semibold text-accent">
                         {r.member_name ?? "—"}
                       </span>
                     ) : (

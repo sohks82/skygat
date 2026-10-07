@@ -65,12 +65,12 @@ function QueueCard({
               <li
                 key={q.id}
                 className={`flex items-center gap-2.5 py-1.5 pl-3 pr-2 ${
-                  next ? "border-l-2 border-l-brass bg-brass/[0.055]" : "border-l-2 border-l-transparent"
+                  next ? "border-l-2 border-l-accent bg-accent/[0.055]" : "border-l-2 border-l-transparent"
                 }`}
               >
                 <span
                   className={`w-5 shrink-0 text-right font-mono text-[0.78rem] ${
-                    next ? "text-brass" : "text-muted"
+                    next ? "text-accent" : "text-muted"
                   }`}
                 >
                   {q.position}
@@ -81,7 +81,7 @@ function QueueCard({
                   {q.note ? <span className="ml-1.5 text-[0.7rem] text-muted">({q.note})</span> : null}
                 </span>
 
-                {next ? <span className="chip shrink-0 text-brass">Next</span> : null}
+                {next ? <span className="chip shrink-0 text-accent">Next</span> : null}
 
                 {admin ? (
                   <span className="flex shrink-0 items-center">

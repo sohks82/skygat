@@ -70,7 +70,7 @@ export function IconUpload({
         onClick={() => input.current?.click()}
         disabled={pending}
         title={iconSrc ? `Replace the icon for ${itemName}` : `Add an icon for ${itemName}`}
-        className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border border-line bg-void transition-colors hover:border-brass disabled:opacity-40"
+        className="grid h-11 w-11 shrink-0 place-items-center rounded-sm border border-line bg-void transition-colors hover:border-accent disabled:opacity-40"
       >
         {pending ? (
           <span className="text-[0.6rem] text-muted">…</span>
